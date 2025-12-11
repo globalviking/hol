@@ -1,13 +1,6 @@
 ;; hol.lisp
 
-(defun seconds-until-next-midnight ()
-  "Return number of seconds until the next local midnight."
-  (multiple-value-bind (sec min hour date month year dow dst-p tz)
-      (get-decoded-time)
-    (declare (ignore date month year dow dst-p tz))
-    (let* ((seconds-per-day 86400)
-           (seconds-today (+ sec (* 60 (+ min (* 60 hour))))))
-      (- seconds-per-day seconds-today))))
+
 
 (defun compute-cycle-day-and-content ()
   "Return (values cycle-day content-string) for the custom 365-day cycle.
@@ -37,6 +30,7 @@ Aug 4, 2025 is Day 1."
          "--content" content
          "--priority" "high"
          "--ongoing"
+         "--alert-once"
          "--icon" "today")
    :search t :wait t))
 
@@ -55,6 +49,6 @@ Aug 4, 2025 is Day 1."
   "Update immediately, then sleep until next midnight and repeat forever."
   (loop
     (update-notification)
-    (sleep (seconds-until-next-midnight))))
+    (sleep 60)))
 
 (main-loop)
